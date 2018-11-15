@@ -1,0 +1,9 @@
+# Build
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ
+.idea
+*.iml
+/out/
