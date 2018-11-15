@@ -37,7 +37,7 @@ publishing {
   }
   repositories {
     maven {
-      url = uri("/Users/thelgis/.m2/repository")
+      url = uri("/Users/thelgis/.m2/repository") // TODO temporary
     }
   }
 }
