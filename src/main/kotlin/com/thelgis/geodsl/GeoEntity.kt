@@ -1,5 +1,3 @@
 package com.thelgis.geodsl
 
-class MyLibrary
-
-
+interface GeoEntity

@@ -1,0 +1,10 @@
+spring:
+  jpa:
+    properties.hibernate.temp.use_jdbc_metadata_defaults: false
+    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgis
+    username: test
+    password: test
+    driver-class-name: org.postgresql.Driver

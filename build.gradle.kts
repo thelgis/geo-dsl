@@ -1,9 +1,22 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+val kotlinVersion = "1.3.10"
+val springBootVersion = "2.1.0.RELEASE"
+val hibernateSpacialVersion = "5.3.7.Final"
+val junitVersion = "4.12"
+val jvmTargetVersion = "1.8"
 
 plugins {
+  val kotlinVersion = "1.3.10"
+  val dokkaVersion = "0.9.17"
+
   `build-scan`
   `maven-publish`
-  kotlin("jvm") version "1.3.10"
-  id("org.jetbrains.dokka") version "0.9.17"
+  kotlin("jvm") version kotlinVersion
+  id("org.jetbrains.kotlin.plugin.allopen") version kotlinVersion
+  id("org.jetbrains.kotlin.plugin.jpa") version kotlinVersion
+  id("org.jetbrains.kotlin.plugin.spring") version kotlinVersion
+  id("org.jetbrains.dokka") version dokkaVersion
 }
 
 buildScan {
@@ -42,11 +55,25 @@ publishing {
   }
 }
 
+// Customise Tasks
+val compileKotlin by tasks.getting(KotlinCompile::class) {
+  kotlinOptions.jvmTarget = jvmTargetVersion
+}
+
+val compileTestKotlin by tasks.getting(KotlinCompile::class) {
+  kotlinOptions.jvmTarget = jvmTargetVersion
+}
+
 repositories {
-  jcenter() 
+  jcenter()
 }
 
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-  testImplementation("junit:junit:4.12")
+  implementation("org.jetbrains.kotlin:kotlin-reflect")
+  implementation("org.hibernate:hibernate-spatial:$hibernateSpacialVersion")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
+
+  testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+  testImplementation("junit:junit:$junitVersion")
 }
