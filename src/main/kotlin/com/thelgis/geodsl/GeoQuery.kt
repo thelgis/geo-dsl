@@ -1,6 +1,6 @@
 package com.thelgis.geodsl
 
-import com.thelgis.geodsl.shapes.ShapeBuilder
+import com.thelgis.geodsl.geometry.GeometryBuilder
 import org.hibernate.SessionFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -10,72 +10,55 @@ import kotlin.reflect.KClass
 @Service
 class GeoQuery @Autowired constructor(private val entityManagerFactory: EntityManagerFactory) {
 
-  fun <T: GeoEntity> run(type: KClass<T>, build: QueryBuilder.() -> Unit): List<T> {
+  private val replacementToken = "<?>"
+
+  fun <T: GeoEntity> run(type: KClass<T>, build: GeoQueryBuilder.() -> Unit): List<T> {
+
     val session = entityManagerFactory.unwrap(SessionFactory::class.java).openSession()
 
-    val queryBuilder = QueryBuilder().apply(build)
+    val queryBuilder = GeoQueryBuilder().apply(build)
 
     val tableName = queryBuilder.table ?: type.simpleName
-    val whereArguments = queryBuilder.whereArguments
-    val polygonBuilder = whereArguments.shapeBuilder
-    val hibernateDescription = polygonBuilder.shape.hibernateDescription
+    val geometries = extractGeometries(queryBuilder.expression)
+    val queryStr = replaceDollars(evaluateExpression(queryBuilder.expression))
 
     // language=sql
     val query = session.createQuery(
-        """
-          |SELECT x
-          |FROM $tableName x
-          |WHERE ${whereArguments.geoFunction}(x.${queryBuilder.column}, :$hibernateDescription) = true
-        """.trimMargin(),
+        "SELECT x FROM $tableName x WHERE $queryStr",
         type.java
     ).apply {
-      setParameter(hibernateDescription, whereArguments.shapeBuilder.create())
+      // Create geometries and set each query parameter with its corresponding geometry
+      geometries.forEachIndexed { index, geometryBuilder ->  setParameter("_$index", geometryBuilder.create())}
     }
 
     val results = query.resultList
 
     session.close()
     return results
+
   }
 
+  private fun replaceDollars(input: String, counter: Int = 0): String =
+    if (input.contains(replacementToken)) {
+      replaceDollars(input.replaceFirst(replacementToken, "_$counter"), counter + 1)
+    } else input
+
+
+  private fun evaluateExpression(expression: GeoExpression): String =
+    when(expression) {
+      is SpacialExpression ->
+        "${expression.whereArguments?.geoFunction?.str} (x.${expression.column}, :$replacementToken) " +
+        "${expression.whereArguments?.operator?.str} ${expression.whereArguments?.operand}"
+      is AND -> "${evaluateExpression(expression.left)} AND ${evaluateExpression(expression.right)}"
+      is OR -> "${evaluateExpression(expression.left)} OR ${evaluateExpression(expression.right)}"
+    }
+
+  private fun extractGeometries(expression: GeoExpression, previousIterationMap: List<GeometryBuilder> = listOf()): List<GeometryBuilder> =
+    when(expression) {
+      is SpacialExpression -> (previousIterationMap + expression.whereArguments?.geometryBuilder) as List<GeometryBuilder>
+      is AND -> extractGeometries(expression.left, extractGeometries(expression.right))
+      is OR -> extractGeometries(expression.left, extractGeometries(expression.right))
+    }
 
 }
 
-@GeoDSLMarker
-class QueryBuilder {
-
-  var table: String? = null
-  lateinit var column: String
-  lateinit var whereArguments: WhereArguments
-
-  fun from(table: String) {
-    this.table = table
-  }
-
-  fun where(build: SpacialFunctions.(spacialFunctions: SpacialFunctions) -> SpacialFunctions) {
-    val emptySpacialFunctions = SpacialFunctions()
-    val spacialFunctions = emptySpacialFunctions.build(emptySpacialFunctions)
-
-    this.column = spacialFunctions.column ?: throw IllegalArgumentException("Where context must be provided with a 'column'")
-    this.whereArguments = spacialFunctions.whereArguments ?: throw IllegalArgumentException("Where context must be provided with 'WhereArguments'")
-  }
-
-}
-
-@GeoDSLMarker
-data class SpacialFunctions(
-  var whereArguments: WhereArguments? = null,
-  var column: String? = null
-) {
-
-  operator fun get(newColumn: String) = this.copy(column = newColumn)
-
-  infix fun within(shapeBuilder: ShapeBuilder) =
-      this.copy(whereArguments = WhereArguments("within", shapeBuilder))
-
-}
-
-data class WhereArguments(
-  val geoFunction: String,
-  val shapeBuilder: ShapeBuilder
-)

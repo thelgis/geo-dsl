@@ -38,4 +38,4 @@ VALUES
 ;
 
 -- Testing:
-SELECT * FROM points where st_within(ST_Buffer(ST_MakePoint(-74.044935, 40.691011)::geometry, 325))
+-- SELECT * FROM points where st_within(ST_Buffer(ST_MakePoint(-74.044935, 40.691011)::geometry, 325))

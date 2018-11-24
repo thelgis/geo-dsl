@@ -1,6 +1,7 @@
-package com.thelgis.geodsl.shapes
+package com.thelgis.geodsl.geometry.shapes
 
 import com.thelgis.geodsl.GeoDSLMarker
+import com.thelgis.geodsl.geometry.GeometryBuilder
 import com.vividsolutions.jts.geom.Coordinate
 import com.vividsolutions.jts.geom.Geometry
 import com.vividsolutions.jts.util.GeometricShapeFactory
@@ -11,12 +12,12 @@ class CircleBuilder(
   var size: Double = 0.0,
   var centerX: Double = 0.0,
   var centerY: Double = 0.0
-): ShapeBuilder {
-  override val shape: Shape = Shape.CIRCLE
+): GeometryBuilder {
+  override val shape = Shape.CIRCLE
   override lateinit var geometry: Geometry
 }
 
-fun circle(build: CircleBuilder.() -> Unit): ShapeBuilder {
+fun circle(build: CircleBuilder.() -> Unit): GeometryBuilder {
   val circleBuilder = CircleBuilder().apply(build)
 
   circleBuilder.geometry =  GeometricShapeFactory().apply {

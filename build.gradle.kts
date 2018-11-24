@@ -19,12 +19,12 @@ plugins {
   id("org.jetbrains.dokka") version dokkaVersion
 }
 
-buildScan {
-  // FIXME Gradle "Kotlin JVM libraries" tutorial uses deprecated methods
-  setLicenseAgreementUrl("https://gradle.com/terms-of-service") 
-  setLicenseAgree("yes")
-  publishAlways() 
-}
+//buildScan {
+//  // FIXME Gradle "Kotlin JVM libraries" tutorial uses deprecated methods
+//  setLicenseAgreementUrl("https://gradle.com/terms-of-service")
+//  setLicenseAgree("yes")
+//  publishAlways()
+//}
 
 group = "com.thelgis.geo-dsl"
 version = "0.0.1-SNAPSHOT"
