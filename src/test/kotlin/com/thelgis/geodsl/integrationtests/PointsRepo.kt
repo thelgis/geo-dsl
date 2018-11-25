@@ -1,6 +1,5 @@
-package com.thelgis.geodsl.repos
+package com.thelgis.geodsl.integrationtests
 
-import com.thelgis.geodsl.entities.PointEntity
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface PointsRepo: JpaRepository<PointEntity, Long> {

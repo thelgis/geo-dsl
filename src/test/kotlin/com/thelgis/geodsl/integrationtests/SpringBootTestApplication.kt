@@ -1,4 +1,4 @@
-package com.thelgis.geodsl
+package com.thelgis.geodsl.integrationtests
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

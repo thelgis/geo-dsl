@@ -1,4 +1,4 @@
-package com.thelgis.geodsl.entities
+package com.thelgis.geodsl.integrationtests
 
 import com.thelgis.geodsl.GeoEntity
 import com.vividsolutions.jts.geom.Point
