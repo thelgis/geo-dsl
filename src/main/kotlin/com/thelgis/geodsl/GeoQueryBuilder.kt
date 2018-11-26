@@ -15,8 +15,12 @@ class GeoQueryBuilder {
     this.table = table
   }
 
-  fun where(build: SpacialExpression.() -> GeoExpression) {
-    this.expression = SpacialExpression().build()
+  fun where(build: WhereBuilder.() -> GeoExpression) {
+    this.expression = WhereBuilder().build()
   }
 
+}
+
+@GeoDSLMarker class WhereBuilder {
+  fun col(column: String) = SpacialExpression(column)
 }

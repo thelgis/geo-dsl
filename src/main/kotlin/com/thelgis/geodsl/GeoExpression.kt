@@ -14,12 +14,10 @@ data class OR(
     val right: GeoExpression
 ): GeoExpression()
 
-@GeoDSLMarker data class SpacialExpression(
-  val whereArguments: WhereArguments? = null,
-  val column: String? = null
+data class SpacialExpression(
+  val column: String,
+  val whereArguments: WhereArguments? = null
 ): GeoExpression() {
-
-  fun col(column: String) = this.copy(column = column)
 
   infix fun within(geometryBuilder: GeometryBuilder) =
       this.copy(whereArguments = WhereArguments(GeoFunction.WITHIN, geometryBuilder, GeoOperator.EQ, "true"))
