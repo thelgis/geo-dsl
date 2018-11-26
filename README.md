@@ -45,7 +45,7 @@ val results: List<PointEntity> =
   geoQuery.run(PointEntity::class) {
     where {
       col("location") within centralPark or
-      (col("location") distanceFrom centralPark moreThan 0.1)
+      (col("location") distanceFrom centralPark lessThan 0.1)
     }
   }
 ```
@@ -69,6 +69,7 @@ geoQuery.run(PointEntity::class) {
 
 Every `run() {...}` call starts and terminates a Hibernate Session. Instantiating the 
 GeoQuery class can either happen through normal construction by providing an entity manager
+factory 
 
 ```kotlin
 val geoQuery = GeoQuery(entityManagerFactory)
