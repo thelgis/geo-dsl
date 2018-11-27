@@ -33,13 +33,13 @@ Another example is getting all points from a database table that are either insi
 Central Park, or less than some distance from it: 
 
 ```kotlin
-val centralPark = polygon (
-  LatLon(-73.973057, 40.764356),
-  LatLon(-73.981898, 40.768094),
-  LatLon(-73.958209, 40.800621),
-  LatLon(-73.949282, 40.796853),
-  LatLon(-73.973057, 40.764356)
-)
+val centralPark = polygon {
+  + LatLon(-73.973057, 40.764356)
+  + LatLon(-73.981898, 40.768094)
+  + LatLon(-73.958209, 40.800621)
+  + LatLon(-73.949282, 40.796853)
+  + LatLon(-73.973057, 40.764356)
+}
 
 val results: List<PointEntity> = 
   geoQuery.run(PointEntity::class) {

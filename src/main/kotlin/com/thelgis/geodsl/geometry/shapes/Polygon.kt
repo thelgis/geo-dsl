@@ -2,7 +2,7 @@ package com.thelgis.geodsl.geometry.shapes
 
 import com.thelgis.geodsl.GeoDSLMarker
 import com.thelgis.geodsl.geometry.GeometryBuilder
-import com.thelgis.geodsl.geometry.LatLon
+import com.thelgis.geodsl.geometry.LatLonBuilder
 import com.vividsolutions.jts.geom.Geometry
 import com.vividsolutions.jts.io.WKTReader
 
@@ -13,14 +13,19 @@ class PolygonBuilder(
   override val shape = Shape.POLYGON
 }
 
-fun polygon(vararg latlons: LatLon): GeometryBuilder =
-    PolygonBuilder(
-        WKTReader().read(
-            """
-          |POLYGON((
-          |${latlons.joinToString { "${it.lat} ${it.lon}" }}
-          |))
-        """.trimMargin()
-        )
-    )
+fun polygon(build: LatLonBuilder.() -> Unit): GeometryBuilder {
+  val latlons = LatLonBuilder(ArrayList()).apply(build).latlons
+
+  return PolygonBuilder(
+      WKTReader().read(
+          """
+            |POLYGON((
+            |${latlons.joinToString { "${it.lat} ${it.lon}" }}
+            |))
+          """.trimMargin()
+      )
+  )
+
+}
+
 

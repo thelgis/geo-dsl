@@ -67,13 +67,13 @@ class GeoDSLIntegrationTests {
     val results =
         geoQuery.run(PointEntity::class) {
           where {
-            col("location") within polygon (
-                LatLon(-73.973057, 40.764356),
-                LatLon(-73.981898, 40.768094),
-                LatLon(-73.958209, 40.800621),
-                LatLon(-73.949282, 40.796853),
-                LatLon(-73.973057, 40.764356)
-            )
+            col("location") within polygon {
+              + LatLon(-73.973057, 40.764356)
+              + LatLon(-73.981898, 40.768094)
+              + LatLon(-73.958209, 40.800621)
+              + LatLon(-73.949282, 40.796853)
+              + LatLon(-73.973057, 40.764356)
+            }
           }
         }
 
@@ -125,13 +125,13 @@ class GeoDSLIntegrationTests {
     val results =
         geoQuery.run(PointEntity::class) {
           where {
-            col("location") distanceFrom polygon(
-                LatLon(-73.973057, 40.764356),
-                LatLon(-73.981898, 40.768094),
-                LatLon(-73.958209, 40.800621),
-                LatLon(-73.949282, 40.796853),
-                LatLon(-73.973057, 40.764356)
-            ) lessThanOrEq  0.1
+            col("location") distanceFrom polygon {
+              + LatLon(-73.973057, 40.764356)
+              + LatLon(-73.981898, 40.768094)
+              + LatLon(-73.958209, 40.800621)
+              + LatLon(-73.949282, 40.796853)
+              + LatLon(-73.973057, 40.764356)
+            } lessThanOrEq  0.1
           }
         }
 
@@ -183,13 +183,13 @@ class GeoDSLIntegrationTests {
   @Test
   fun `DSL | find points in polygon and distance from polygon`() {
 
-    val centralPark = polygon (
-      LatLon(-73.973057, 40.764356),
-      LatLon(-73.981898, 40.768094),
-      LatLon(-73.958209, 40.800621),
-      LatLon(-73.949282, 40.796853),
-      LatLon(-73.973057, 40.764356)
-    )
+    val centralPark = polygon {
+      + LatLon(-73.973057, 40.764356)
+      + LatLon(-73.981898, 40.768094)
+      + LatLon(-73.958209, 40.800621)
+      + LatLon(-73.949282, 40.796853)
+      + LatLon(-73.973057, 40.764356)
+    }
 
     val results =
         geoQuery.run(PointEntity::class) {
