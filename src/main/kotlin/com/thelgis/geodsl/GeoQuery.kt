@@ -39,25 +39,24 @@ class GeoQuery @Autowired constructor(private val entityManagerFactory: EntityMa
   }
 
   private fun replaceDollars(input: String, counter: Int = 0): String =
-    if (input.contains(replacementToken)) {
-      replaceDollars(input.replaceFirst(replacementToken, "_$counter"), counter + 1)
-    } else input
+    if (input.contains(replacementToken)) replaceDollars(input.replaceFirst(replacementToken, "_$counter"), counter + 1)
+    else input
 
 
   private fun evaluateExpression(expression: GeoExpression): String =
     when(expression) {
+      is AND -> "${evaluateExpression(expression.left)} AND ${evaluateExpression(expression.right)}"
+      is OR -> "${evaluateExpression(expression.left)} OR ${evaluateExpression(expression.right)}"
       is SpacialExpression ->
         "${expression.whereArguments?.geoFunction?.str} (x.${expression.column}, :$replacementToken) " +
         "${expression.whereArguments?.operator?.str} ${expression.whereArguments?.operand}"
-      is AND -> "${evaluateExpression(expression.left)} AND ${evaluateExpression(expression.right)}"
-      is OR -> "${evaluateExpression(expression.left)} OR ${evaluateExpression(expression.right)}"
     }
 
   private fun extractGeometries(expression: GeoExpression, previousIterationMap: List<GeometryBuilder> = listOf()): List<GeometryBuilder> =
     when(expression) {
-      is SpacialExpression -> (previousIterationMap + expression.whereArguments?.geometryBuilder) as List<GeometryBuilder>
       is AND -> extractGeometries(expression.left, extractGeometries(expression.right))
       is OR -> extractGeometries(expression.left, extractGeometries(expression.right))
+      is SpacialExpression -> (previousIterationMap + expression.whereArguments?.geometryBuilder) as List<GeometryBuilder>
     }
 
 }
