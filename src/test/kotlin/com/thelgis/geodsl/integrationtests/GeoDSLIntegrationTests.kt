@@ -30,34 +30,33 @@ class GeoDSLIntegrationTests {
   @Test
   fun `Hibernate | find points in polygon`() {
 
-    val session = entityManagerFactory.unwrap(SessionFactory::class.java).openSession()
-
-    val polygon =
+    val centralParkStr =
         """
-          |POLYGON(
-          |(-73.973057 40.764356,
+          |POLYGON((
+          |-73.973057 40.764356,
           |-73.981898 40.768094,
           |-73.958209 40.800621,
           |-73.949282 40.796853,
-          |-73.973057 40.764356)
-          )
+          |-73.973057 40.764356))
         """.trimMargin()
 
     val wktReader = WKTReader()
-    val polygonGeometry = wktReader.read(polygon)
-    polygonGeometry.srid = DEFAULT_SRID
+    val centralPark = wktReader.read(centralParkStr)
+    centralPark.srid = DEFAULT_SRID
+
+    val session = entityManagerFactory.unwrap(SessionFactory::class.java).openSession()
 
     val query = session.createQuery(
-        "select p from PointEntity p where within(p.location, :polygon) = true",
-        PointEntity::class.java
+        "select p from Landmarks p where within(p.location, :polygon) = true",
+        Landmarks::class.java
     )
-    query.setParameter("polygon", polygonGeometry)
+    query.setParameter("polygon", centralPark)
+
     val results = query.resultList
+    session.close()
 
     Assert.assertTrue(results.map { it.name }.contains("Central Park Carousel"))
     Assert.assertFalse(results.map { it.name }.contains("Apollo Theater"))
-
-    session.close()
 
   }
 
@@ -65,7 +64,7 @@ class GeoDSLIntegrationTests {
   fun `DSL | find points in polygon`() {
 
     val results =
-        geoQuery.run(PointEntity::class) {
+        geoQuery.run(Landmarks::class) {
           where {
             col("location") within polygon {
               + LatLon(-73.973057, 40.764356)
@@ -85,37 +84,34 @@ class GeoDSLIntegrationTests {
   @Test
   fun `Hibernate | find distance from polygon`() {
 
-    val session = entityManagerFactory.unwrap(SessionFactory::class.java).openSession()
-
-    val polygon =
+    val centralParkStr =
         """
-          |POLYGON(
-          |(-73.973057 40.764356,
+          |POLYGON((
+          |-73.973057 40.764356,
           |-73.981898 40.768094,
           |-73.958209 40.800621,
           |-73.949282 40.796853,
-          |-73.973057 40.764356)
-          )
+          |-73.973057 40.764356))
         """.trimMargin()
 
     val wktReader = WKTReader()
-    val polygonGeometry = wktReader.read(polygon)
-    polygonGeometry.srid = DEFAULT_SRID
+    val centralPark = wktReader.read(centralParkStr)
+    centralPark.srid = DEFAULT_SRID
 
-    // Run query
+    val session = entityManagerFactory.unwrap(SessionFactory::class.java).openSession()
+
     val query = session.createQuery(
-        "select p from PointEntity p where distance(p.location, :polygon) <= 0.1",
-        PointEntity::class.java
+        "select p from Landmarks p where distance(p.location, :polygon) <= 0.1",
+        Landmarks::class.java
     )
-    query.setParameter("polygon", polygonGeometry)
+    query.setParameter("polygon", centralPark)
 
     val results = query.resultList
+    session.close()
 
     Assert.assertTrue(results.map { it.name }.contains("Central Park Carousel"))
     Assert.assertTrue(results.map { it.name }.contains("Apollo Theater"))
     Assert.assertFalse(results.map { it.name }.contains("Statue of Liberty"))
-
-    session.close()
 
   }
 
@@ -123,7 +119,7 @@ class GeoDSLIntegrationTests {
   fun `DSL | find distance from polygon`() {
 
     val results =
-        geoQuery.run(PointEntity::class) {
+        geoQuery.run(Landmarks::class) {
           where {
             col("location") distanceFrom polygon {
               + LatLon(-73.973057, 40.764356)
@@ -144,39 +140,37 @@ class GeoDSLIntegrationTests {
   @Test
   fun `Hibernate | find points in polygon and distance from polygon`() {
 
-    val session = entityManagerFactory.unwrap(SessionFactory::class.java).openSession()
-
-    val polygon =
+    val centralParkStr =
         """
-          |POLYGON(
-          |(-73.973057 40.764356,
+          |POLYGON((
+          |-73.973057 40.764356,
           |-73.981898 40.768094,
           |-73.958209 40.800621,
           |-73.949282 40.796853,
-          |-73.973057 40.764356)
-          )
+          |-73.973057 40.764356))
         """.trimMargin()
 
     val wktReader = WKTReader()
-    val polygonGeometry = wktReader.read(polygon)
-    polygonGeometry.srid = DEFAULT_SRID
+    val centralPark = wktReader.read(centralParkStr)
+    centralPark.srid = DEFAULT_SRID
+
+    val session = entityManagerFactory.unwrap(SessionFactory::class.java).openSession()
 
     // language=sql
     val query = session.createQuery(
         """
-          | select p from PointEntity p where within(p.location, :polygon) = true or
+          | select p from Landmarks p where within(p.location, :polygon) = true or
           | distance(p.location, :polygon) > 0.1
         """.trimMargin(),
-        PointEntity::class.java
+        Landmarks::class.java
     )
-    query.setParameter("polygon", polygonGeometry)
+    query.setParameter("polygon", centralPark)
 
     val results = query.resultList
+    session.close()
 
     Assert.assertTrue(results.map { it.name }.contains("Central Park Carousel"))
     Assert.assertTrue(results.map { it.name }.contains("Statue of Liberty"))
-
-    session.close()
 
   }
 
@@ -192,7 +186,7 @@ class GeoDSLIntegrationTests {
     }
 
     val results =
-        geoQuery.run(PointEntity::class) {
+        geoQuery.run(Landmarks::class) {
           where {
             col("location") within centralPark or
               (col("location") distanceFrom centralPark moreThan 0.1)
@@ -208,7 +202,7 @@ class GeoDSLIntegrationTests {
   fun `DSL | find points in circle`() {
 
     val results =
-        geoQuery.run(PointEntity::class) {
+        geoQuery.run(Landmarks::class) {
           where {
             col("location") within circle {
               points = 32

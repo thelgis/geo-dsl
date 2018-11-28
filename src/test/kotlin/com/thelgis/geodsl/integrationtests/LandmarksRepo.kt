@@ -2,6 +2,6 @@ package com.thelgis.geodsl.integrationtests
 
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface PointsRepo: JpaRepository<PointEntity, Long> {
-  fun findByName(name: String): PointEntity?
+interface LandmarksRepo: JpaRepository<Landmarks, Long> {
+  fun findByName(name: String): Landmarks?
 }
