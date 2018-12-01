@@ -205,10 +205,10 @@ class GeoDSLIntegrationTests {
         geoQuery.run(Landmarks::class) {
           where {
             col("location") within circle {
-              points = 32
+              x = 40.691011
+              y = -74.044935
               size = 325.0
-              centerX = 40.691011
-              centerY = -74.044935
+              points = 32
             }
           }
         }

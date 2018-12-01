@@ -12,24 +12,23 @@ Geo-DSL is a small library that demonstrates a limited Kotlin Domain Specific La
 for Hibernate driven geo-spacial queries. It can be used on top of a a Spring Application 
 that utilizes Hibernate as its ORM. 
 
-The library is not meant to be used in a real production application, but is 
-developed for demonstration purposes of how to wrap complex APIs into DSLs.
+Currently the library is not meant to be used in a real production application. It is 
+developed as a proof of concept of wrapping Hibernate geo-spacial queries in a DSL. 
 
-The basic functionality is wrapping the Hibernate APIs for building geography shapes 
-and geo-spacial queries, so as to show how a geo-spacial Hibernate DSL could look like. 
+The basic parts covered by the DSL is building geography shapes and running geo-spacial queries. 
 
-For example, creating a `Circle` on the map with the DSL can be expressed as: 
+For example, creating a `Circle` on the map can be expressed as: 
 
 ```kotlin
 circle {
-  points = 32
+  x = 40.691011
+  y = -74.044935
   size = 325.0
-  centerX = 40.691011
-  centerY = -74.044935
+  points = 32
 }
 ```
 
-Another example is getting all points from a database table that are either inside
+Another example: getting all points from the database table that are either inside
 Central Park, or less than some distance from it: 
 
 ```kotlin
@@ -88,14 +87,14 @@ to demonstrate how to write queries. All examples are in the `GeoDSLIntegrationT
 and contain query examples with the DSL and their non-DSL pure Hibernate counter part. 
 
 To run the integration tests you will need a Postgres Database with the PostGIS plugin. 
-You can easily set up the integration tests Database with the following Docker image: 
+You can easily set up the integration tests Database with Docker (you will need to have Docker installed). 
 
 ```bash
 docker volume create postgis_data
 docker run --name=postgis -d -e POSTGRES_USER=test -e POSTGRES_PASS=test -e POSTGRES_DBNAME=postgis -e ALLOW_IP_RANGE=0.0.0.0/0 -p 5432:5432 -v postgis_data:/var/lib/postgresql kartoza/postgis:9.6-2.4
 ``` 
 
-Then create the database schema and populate it with data using the script:
+Then create the database schema and populate it with data by running the following script:
 ```bash
 geo-dsl/src/test/resources/db/integration_tests_db.sql
 ```
@@ -112,11 +111,12 @@ TODO
 
 ## Features & Contributing 
 
-As explained above the purpose of this repository is not to create a complete DSL 
-for geo-spacial queries yet, but to demonstrate how such a DSL would look like. Nevertheless, 
-feel free to contribute if you feel you can enhance the demonstrated functionality.  
+As explained above the initial purpose of this repository is not to create a complete DSL 
+for geo-spacial queries, but to demonstrate how such a DSL would look like. Nevertheless, 
+feel free to contribute to enhance the demonstrated functionality. If the project ever reaches a very mature state 
+it could be officially released.  
  
-The features that are supported for now are the following: 
+Currently supported features: 
 
 * Creating Geography objects 
   * Polygon 
@@ -124,7 +124,7 @@ The features that are supported for now are the following:
 * Querying 
   * `within` queries
   * `distance` queries
-  * chaining geo queries with `and`/`or`
+  * chaining geo queries with `and`/`or` 
   
 
   

@@ -8,10 +8,10 @@ import com.vividsolutions.jts.util.GeometricShapeFactory
 
 @GeoDSLMarker
 class CircleBuilder(
-  var points: Int = 0,
+  var x: Double = 0.0,
+  var y: Double = 0.0,
   var size: Double = 0.0,
-  var centerX: Double = 0.0,
-  var centerY: Double = 0.0
+  var points: Int = 0
 ): GeometryBuilder {
   override val shape = Shape.CIRCLE
   override lateinit var geometry: Geometry
@@ -22,7 +22,7 @@ fun circle(build: CircleBuilder.() -> Unit): GeometryBuilder {
 
   circleBuilder.geometry =  GeometricShapeFactory().apply {
     setNumPoints(circleBuilder.points)
-    setCentre(Coordinate(circleBuilder.centerX, circleBuilder.centerY))
+    setCentre(Coordinate(circleBuilder.x, circleBuilder.y))
     setSize(circleBuilder.size)
   }.createCircle()
 
