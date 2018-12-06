@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val kotlinVersion = "1.3.10"
 val springBootVersion = "2.1.0.RELEASE"
-val hibernateSpacialVersion = "5.3.7.Final"
+val hibernateSpatialVersion = "5.3.7.Final"
 val junitVersion = "4.12"
 val jvmTargetVersion = "1.8"
 
@@ -71,7 +71,7 @@ repositories {
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
-  implementation("org.hibernate:hibernate-spatial:$hibernateSpacialVersion")
+  implementation("org.hibernate:hibernate-spatial:$hibernateSpatialVersion")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")

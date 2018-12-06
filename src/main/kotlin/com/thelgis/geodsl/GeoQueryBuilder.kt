@@ -22,5 +22,5 @@ class GeoQueryBuilder {
 }
 
 @GeoDSLMarker class WhereBuilder {
-  fun col(column: String) = SpacialExpression(column)
+  fun col(column: String) = SpatialExpression(column)
 }

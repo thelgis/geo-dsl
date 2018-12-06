@@ -14,15 +14,15 @@ data class OR(
   val right: GeoExpression
 ): GeoExpression()
 
-data class SpacialExpression(
+data class SpatialExpression(
   val column: String,
   val whereArguments: WhereArguments? = null
 ): GeoExpression()
 
-infix fun SpacialExpression.within(geometryBuilder: GeometryBuilder) =
+infix fun SpatialExpression.within(geometryBuilder: GeometryBuilder) =
     this.copy(whereArguments = WhereArguments(GeoFunction.WITHIN, geometryBuilder, GeoOperator.EQ, "true"))
 
-infix fun SpacialExpression.distanceFrom(geometryBuilder: GeometryBuilder) =
+infix fun SpatialExpression.distanceFrom(geometryBuilder: GeometryBuilder) =
     GeoDistanceFunction(this.copy(whereArguments = WhereArguments(GeoFunction.DISTANCE, geometryBuilder)))
 
 

@@ -47,7 +47,7 @@ class GeoQuery @Autowired constructor(private val entityManagerFactory: EntityMa
     when(expression) {
       is AND -> "${evaluateExpression(expression.left)} AND ${evaluateExpression(expression.right)}"
       is OR -> "${evaluateExpression(expression.left)} OR ${evaluateExpression(expression.right)}"
-      is SpacialExpression ->
+      is SpatialExpression ->
         "${expression.whereArguments?.geoFunction?.str} (x.${expression.column}, :$replacementToken) " +
         "${expression.whereArguments?.operator?.str} ${expression.whereArguments?.operand}"
     }
@@ -56,7 +56,7 @@ class GeoQuery @Autowired constructor(private val entityManagerFactory: EntityMa
     when(expression) {
       is AND -> extractGeometries(expression.left, extractGeometries(expression.right))
       is OR -> extractGeometries(expression.left, extractGeometries(expression.right))
-      is SpacialExpression -> (previousIterationMap + expression.whereArguments?.geometryBuilder) as List<GeometryBuilder>
+      is SpatialExpression -> (previousIterationMap + expression.whereArguments?.geometryBuilder) as List<GeometryBuilder>
     }
 
 }
