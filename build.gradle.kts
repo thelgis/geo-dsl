@@ -1,13 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotlinVersion = "1.3.10"
+val kotlinVersion = "1.3.11"
 val springBootVersion = "2.1.0.RELEASE"
 val hibernateSpatialVersion = "5.3.7.Final"
 val junitVersion = "4.12"
 val jvmTargetVersion = "1.8"
 
 plugins {
-  val kotlinVersion = "1.3.10"
+  val kotlinVersion = "1.3.11"
   val dokkaVersion = "0.9.17"
 
   `build-scan`
