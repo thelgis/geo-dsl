@@ -9,13 +9,13 @@
 
 
 Geo-DSL is a small library that demonstrates a limited Kotlin Domain Specific Language
-for Hibernate driven geo-spacial queries. It can be used on top of a a Spring Application 
+for Hibernate driven geo-spatial queries. It can be used on top of a a Spring Application 
 that utilizes Hibernate as its ORM. 
 
 Currently the library is not meant to be used in a real production application. It is 
-developed as a proof of concept of wrapping Hibernate geo-spacial queries in a DSL. 
+developed as a proof of concept of wrapping Hibernate geo-spatial queries in a DSL. 
 
-The basic parts covered by the DSL is building geography shapes and running geo-spacial queries. 
+The basic parts covered by the DSL is building geography shapes and running geo-spatial queries. 
 
 For example, creating a `Circle` on the map can be expressed as: 
 
@@ -112,7 +112,7 @@ TODO
 ## Features & Contributing 
 
 As explained above the initial purpose of this repository is not to create a complete DSL 
-for geo-spacial queries, but to demonstrate how such a DSL would look like. Nevertheless, 
+for geo-spatial queries, but to demonstrate how such a DSL would look like. Nevertheless, 
 feel free to contribute to enhance the demonstrated functionality. If the project ever reaches a very mature state 
 it could be officially released.  
  
