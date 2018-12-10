@@ -101,7 +101,7 @@ geo-dsl/src/test/resources/db/integration_tests_db.sql
 
 Run the tests by: 
 ```bash
-./gradlew test
+./gradlew test -Ptest.profile=integration
 ```
 or use the `.bat` file if you are using Windows.
 

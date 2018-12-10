@@ -64,6 +64,12 @@ val compileTestKotlin by tasks.getting(KotlinCompile::class) {
   kotlinOptions.jvmTarget = jvmTargetVersion
 }
 
+tasks.withType<Test> {
+  if (properties["test.profile"] != "integration") {
+    exclude("com/thelgis/geodsl/integrationtests/**")
+  }
+}
+
 repositories {
   jcenter()
 }
